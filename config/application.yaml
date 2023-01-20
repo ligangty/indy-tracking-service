@@ -19,7 +19,7 @@ quarkus:
     port: 8080
     read-timeout: 30m
     limits:
-      max-body-size:  500m
+      max-body-size: 500m
   resteasy:
     gzip:
       enabled: true
@@ -62,7 +62,7 @@ quarkus:
         level: WARN
       "io.quarkus":
         level: WARN
-#        min-level: DEBUG
+      #        min-level: DEBUG
       "io.undertow":
         level: WARN
       "io.vertx":

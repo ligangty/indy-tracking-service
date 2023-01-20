@@ -27,7 +27,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -37,167 +44,186 @@ import java.util.List;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.eclipse.microprofile.openapi.annotations.enums.ParameterIn.PATH;
 
-@Tag(name = "Tracking Record Access", description = "Manages tracking records.")
-@Path("/api/folo/admin")
+@Tag( name = "Tracking Record Access", description = "Manages tracking records." )
+@Path( "/api/folo/admin" )
 @ApplicationScoped
-public class AdminResource {
+public class AdminResource
+{
     public static final String MEDIATYPE_APPLICATION_ZIP = "application/zip";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger( getClass() );
 
-    public AdminResource() {
+    public AdminResource()
+    {
     }
 
-    @Operation(description = "Recalculate sizes and checksums for every file listed in a tracking record.")
-    @APIResponse(responseCode = "200", description = "Recalculated tracking report")
-    @APIResponse(responseCode = "404", description = "No such tracking record found")
-    @Path("/{id}/record/recalculate")
+    @Operation( description = "Recalculate sizes and checksums for every file listed in a tracking record." )
+    @APIResponse( responseCode = "200", description = "Recalculated tracking report" )
+    @APIResponse( responseCode = "404", description = "No such tracking record found" )
+    @Path( "/{id}/record/recalculate" )
     @GET
-    public Response recalculateRecord(@Parameter(description = "User-assigned tracking session key", in = PATH, required = true) @PathParam("id") final String id) {
+    public Response recalculateRecord(
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+    {
         Response response;
 
-        logger.info("id is: {}", id);
+        logger.info( "id is: {}", id );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Retrieve the content referenced in a tracking record as a ZIP-compressed Maven repository directory.")
-    @APIResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = File.class)),
-            description = "ZIP repository content")
-    @APIResponse(responseCode = "404", description = "No such tracking record")
-    @Path("/{id}/record/zip")
+    @Operation( description = "Retrieve the content referenced in a tracking record as a ZIP-compressed Maven repository directory." )
+    @APIResponse( responseCode = "200", content = @Content( schema = @Schema( implementation = File.class ) ), description = "ZIP repository content" )
+    @APIResponse( responseCode = "404", description = "No such tracking record" )
+    @Path( "/{id}/record/zip" )
     @GET
-    @Produces(MEDIATYPE_APPLICATION_ZIP)
-    public Response getZipRepository(@Parameter(description = "User-assigned tracking session key", in = PATH, required = true) @PathParam("id") final String id) {
+    @Produces( MEDIATYPE_APPLICATION_ZIP )
+    public Response getZipRepository(
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+    {
         Response response;
 
-        logger.info("id is: {}", id);
+        logger.info( "id is: {}", id );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Alias of /{id}/record, returns the tracking record for the specified key")
-    @APIResponse(responseCode = "200", description = "Tracking record")
-    @APIResponse(responseCode = "404", description = "No such tracking record")
-    @Path("/{id}/report")
+    @Operation( description = "Alias of /{id}/record, returns the tracking record for the specified key" )
+    @APIResponse( responseCode = "200", description = "Tracking record" )
+    @APIResponse( responseCode = "404", description = "No such tracking record" )
+    @Path( "/{id}/report" )
     @GET
-    public Response getReport(@Parameter(description = "User-assigned tracking session key", in = PATH, required = true) @PathParam("id") final String id) {
+    public Response getReport(
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+    {
         Response response;
 
-        logger.info("id is: {}", id);
+        logger.info( "id is: {}", id );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Explicitly setup a new tracking record for the specified key, to prevent 404 if the record is never used.")
-    @APIResponse(responseCode = "201", description = "Tracking record was created")
-    @Path("/{id}/record")
+    @Operation( description = "Explicitly setup a new tracking record for the specified key, to prevent 404 if the record is never used." )
+    @APIResponse( responseCode = "201", description = "Tracking record was created" )
+    @Path( "/{id}/record" )
     @PUT
-    public Response initRecord(@Parameter(description = "User-assigned tracking session key", in = PATH, required = true) @PathParam("id") final String id) {
+    public Response initRecord(
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+    {
         Response response;
 
-        logger.info("id is: {}", id);
+        logger.info( "id is: {}", id );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Seal the tracking record for the specified key, to prevent further content logging")
-    @APIResponse(responseCode = "200", description = "Tracking record")
-    @APIResponse(responseCode = "404", description = "No such tracking record")
-    @Path("/{id}/record")
+    @Operation( description = "Seal the tracking record for the specified key, to prevent further content logging" )
+    @APIResponse( responseCode = "200", description = "Tracking record" )
+    @APIResponse( responseCode = "404", description = "No such tracking record" )
+    @Path( "/{id}/record" )
     @POST
-    public Response sealRecord(@Parameter(description = "User-assigned tracking session key", in = PATH, required = true) @PathParam("id") final String id) {
+    public Response sealRecord(
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+    {
         Response response;
 
-        logger.info("id is: {}", id);
+        logger.info( "id is: {}", id );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Alias of /{id}/record, returns the tracking record for the specified key")
-    @APIResponse(responseCode = "200", description = "Tracking record")
-    @APIResponse(responseCode = "404", description = "No such tracking record")
-    @Path("/{id}/record")
+    @Operation( description = "Alias of /{id}/record, returns the tracking record for the specified key" )
+    @APIResponse( responseCode = "200", description = "Tracking record" )
+    @APIResponse( responseCode = "404", description = "No such tracking record" )
+    @Path( "/{id}/record" )
     @GET
-    public Response getRecord(@Parameter(description = "User-assigned tracking session key", in = PATH, required = true) @PathParam("id") final String id) {
+    public Response getRecord(
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+    {
         Response response;
 
-        logger.info("id is: {}", id);
+        logger.info( "id is: {}", id );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Delete the tracking record for the specified key")
-    @Path("/{id}/record")
+    @Operation( description = "Delete the tracking record for the specified key" )
+    @Path( "/{id}/record" )
     @DELETE
-    public Response clearRecord(@Parameter(description = "User-assigned tracking session key", in = PATH, required = true) @PathParam("id") final String id) {
+    public Response clearRecord(
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+    {
         Response response;
 
-        logger.info("id is: {}", id);
+        logger.info( "id is: {}", id );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Retrieve tracking ids for records of given type.")
-    @APIResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)),
-            description = "tracking ids with sealed or in_progress")
-    @APIResponse(responseCode = "404", description = "No ids found for type")
-    @Path("/report/ids/{type}")
+    @Operation( description = "Retrieve tracking ids for records of given type." )
+    @APIResponse( responseCode = "200", content = @Content( schema = @Schema( implementation = List.class ) ), description = "tracking ids with sealed or in_progress" )
+    @APIResponse( responseCode = "404", description = "No ids found for type" )
+    @Path( "/report/ids/{type}" )
     @GET
-    public Response getRecordIds(@Parameter(description = "Report type, should be in_progress|sealed|all|legacy", in = PATH, required = true) @PathParam("type") final String type) {
+    public Response getRecordIds(
+                    @Parameter( description = "Report type, should be in_progress|sealed|all|legacy", in = PATH, required = true ) @PathParam( "type" ) final String type )
+    {
         Response response;
 
-        logger.info("type is: {}", type);
+        logger.info( "type is: {}", type );
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Export the records as a ZIP file.")
-    @APIResponse(responseCode = "200", description = "ZIP content")
-    @Path("/report/export")
+    @Operation( description = "Export the records as a ZIP file." )
+    @APIResponse( responseCode = "200", description = "ZIP content" )
+    @Path( "/report/export" )
     @GET
-    @Produces(MEDIATYPE_APPLICATION_ZIP)
-    public Response exportReport() {
+    @Produces( MEDIATYPE_APPLICATION_ZIP )
+    public Response exportReport()
+    {
         Response response;
 
         response = Response.ok().build();
         return response;
     }
 
-    @Operation(description = "Import records from a ZIP file.")
-    @APIResponse(responseCode = "201", description = "Import ZIP content")
-    @Path("/report/export")
+    @Operation( description = "Import records from a ZIP file." )
+    @APIResponse( responseCode = "201", description = "Import ZIP content" )
+    @Path( "/report/export" )
     @PUT
-    public Response importReport(final @Context UriInfo uriInfo, final @Context HttpServletRequest request) {
-        return Response.created(uriInfo.getRequestUri()).build();
+    public Response importReport( final @Context UriInfo uriInfo, final @Context HttpServletRequest request )
+    {
+        return Response.created( uriInfo.getRequestUri() ).build();
     }
 
-    @Operation(description = "Batch delete files uploaded through FOLO trackingID under the given storeKey.")
-    @APIResponse(responseCode = "200", description = "Batch delete operation finished.")
-    @RequestBody(description = "JSON object, specifying trackingID and storeKey, with other configuration options",
-            name = "body", required = true)
-    @Path("/batch/delete")
+    @Operation( description = "Batch delete files uploaded through FOLO trackingID under the given storeKey." )
+    @APIResponse( responseCode = "200", description = "Batch delete operation finished." )
+    @RequestBody( description = "JSON object, specifying trackingID and storeKey, with other configuration options", name = "body", required = true )
+    @Path( "/batch/delete" )
     @POST
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    public Response doDelete(@Context final UriInfo uriInfo, @Context final HttpServletRequest request) {
-        return Response.created(uriInfo.getRequestUri()).build();
+    @Consumes( APPLICATION_JSON )
+    @Produces( APPLICATION_JSON )
+    public Response doDelete( @Context final UriInfo uriInfo, @Context final HttpServletRequest request )
+    {
+        return Response.created( uriInfo.getRequestUri() ).build();
     }
 
-    @Operation(description = "Import folo from ISPN cache to Cassandra.")
-    @APIResponse(responseCode = "201", description = "Import folo from ISPN cache to Cassandra.")
-    @Path("/report/importToCassandra")
+    @Operation( description = "Import folo from ISPN cache to Cassandra." )
+    @APIResponse( responseCode = "201", description = "Import folo from ISPN cache to Cassandra." )
+    @Path( "/report/importToCassandra" )
     @PUT
-    public Response importFoloToCassandra(final @Context UriInfo uriInfo, final @Context HttpServletRequest request) {
-        return Response.created(uriInfo.getRequestUri()).build();
+    public Response importFoloToCassandra( final @Context UriInfo uriInfo, final @Context HttpServletRequest request )
+    {
+        return Response.created( uriInfo.getRequestUri() ).build();
     }
 
 }
