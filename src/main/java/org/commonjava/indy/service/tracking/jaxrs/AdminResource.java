@@ -15,11 +15,13 @@
  */
 package org.commonjava.indy.service.tracking.jaxrs;
 
+import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.controller.AdminController;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
+import org.commonjava.indy.service.tracking.model.dto.TrackingIdsDTO;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -45,10 +47,16 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.emptySet;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.commonjava.indy.service.tracking.Constants.ALL;
+import static org.commonjava.indy.service.tracking.Constants.LEGACY;
+import static org.commonjava.indy.service.tracking.Constants.TRACKING_TYPE.IN_PROGRESS;
+import static org.commonjava.indy.service.tracking.Constants.TRACKING_TYPE.SEALED;
 import static org.eclipse.microprofile.openapi.annotations.enums.ParameterIn.PATH;
 
 @Tag( name = "Tracking Record Access", description = "Manages tracking records." )
@@ -213,11 +221,41 @@ public class AdminResource
                     @Parameter( description = "Report type, should be in_progress|sealed|all|legacy", in = PATH, required = true ) @PathParam( "type" ) final String type )
     {
         Response response;
+        TrackingIdsDTO ids;
+        if ( LEGACY.equals( type ) )
+        {
+            ids = controller.getLegacyTrackingIds();
+        }
+        else
+        {
+            Set<Constants.TRACKING_TYPE> types = getRequiredTypes( type );
+            ids = controller.getTrackingIds( types );
+        }
+        if ( ids != null )
+        {
+            response = responseHelper.formatOkResponseWithJsonEntity( ids );
+        }
+        else
+        {
+            response = Response.status( Response.Status.NOT_FOUND ).build();
+        }
 
-        logger.info( "type is: {}", type );
-
-        response = Response.ok().build();
         return response;
+    }
+
+    private Set<Constants.TRACKING_TYPE> getRequiredTypes( String type )
+    {
+        Set<Constants.TRACKING_TYPE> types = new HashSet<>();
+
+        if ( IN_PROGRESS.getValue().equals( type ) || ALL.equals( type ) )
+        {
+            types.add( IN_PROGRESS );
+        }
+        if ( SEALED.getValue().equals( type ) || ALL.equals( type ) )
+        {
+            types.add( SEALED );
+        }
+        return types;
     }
 
     @Operation( description = "Export the records as a ZIP file." )

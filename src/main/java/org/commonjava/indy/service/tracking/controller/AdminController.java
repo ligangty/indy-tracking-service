@@ -1,5 +1,6 @@
 package org.commonjava.indy.service.tracking.controller;
 
+import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuery;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
@@ -8,6 +9,7 @@ import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntryDTO;
+import org.commonjava.indy.service.tracking.model.dto.TrackingIdsDTO;
 import org.commonjava.indy.service.tracking.util.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
 import java.net.MalformedURLException;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class AdminController
@@ -110,6 +113,50 @@ public class AdminController
         entryDTO.setSize( entry.getSize() );
         entryDTO.setTimestamps( entry.getTimestamps() );
         return entryDTO;
+    }
+
+    public TrackingIdsDTO getLegacyTrackingIds()
+    {
+        logger.info( "Get legacy folo ids" );
+        TrackingIdsDTO ret = null;
+        Set<String> sealed = recordManager.getLegacyTrackingKeys()
+                                          .stream()
+                                          .map( TrackingKey::getId )
+                                          .collect( Collectors.toSet() );
+        if ( sealed != null )
+        {
+            ret = new TrackingIdsDTO();
+            ret.setSealed( sealed );
+        }
+        return ret;
+    }
+
+    public TrackingIdsDTO getTrackingIds( final Set<Constants.TRACKING_TYPE> types )
+    {
+
+        Set<String> inProgress = null;
+        if ( types.contains( Constants.TRACKING_TYPE.IN_PROGRESS ) )
+        {
+            inProgress = recordManager.getInProgressTrackingKey()
+                                      .stream()
+                                      .map( TrackingKey::getId )
+                                      .collect( Collectors.toSet() );
+        }
+
+        Set<String> sealed = null;
+        if ( types.contains( Constants.TRACKING_TYPE.SEALED ) )
+        {
+            sealed = recordManager.getSealedTrackingKey()
+                                  .stream()
+                                  .map( TrackingKey::getId )
+                                  .collect( Collectors.toSet() );
+        }
+
+        if ( ( inProgress != null && !inProgress.isEmpty() ) || ( sealed != null && !sealed.isEmpty() ) )
+        {
+            return new TrackingIdsDTO( inProgress, sealed );
+        }
+        return null;
     }
 
 }
