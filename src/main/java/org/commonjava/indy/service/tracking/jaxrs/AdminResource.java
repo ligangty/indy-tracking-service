@@ -119,14 +119,11 @@ public class AdminResource
     @Path( "/{id}/record" )
     @PUT
     public Response initRecord(
-                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id,
+                    @Context final UriInfo uriInfo )
     {
-        Response response;
-
-        logger.info( "id is: {}", id );
-
-        response = Response.ok().build();
-        return response;
+        Response.ResponseBuilder rb = Response.created( uriInfo.getRequestUri() );
+        return rb.build();
     }
 
     @Operation( description = "Seal the tracking record for the specified key, to prevent further content logging" )
@@ -135,14 +132,19 @@ public class AdminResource
     @Path( "/{id}/record" )
     @POST
     public Response sealRecord(
-                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id,
+                    @Context final UriInfo uriInfo )
     {
-        Response response;
-
-        logger.info( "id is: {}", id );
-
-        response = Response.ok().build();
-        return response;
+        final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();
+        TrackedContentDTO record = controller.seal( id, baseUrl );
+        if ( record == null )
+        {
+            return Response.status( Response.Status.NOT_FOUND ).build();
+        }
+        else
+        {
+            return Response.ok().build();
+        }
     }
 
     @Operation( description = "Alias of /{id}/record, returns the tracking record for the specified key" )
