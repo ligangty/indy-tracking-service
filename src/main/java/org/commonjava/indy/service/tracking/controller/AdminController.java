@@ -1,6 +1,7 @@
 package org.commonjava.indy.service.tracking.controller;
 
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuery;
+import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
 import org.commonjava.indy.service.tracking.model.TrackedContent;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
@@ -51,6 +52,12 @@ public class AdminController
     {
         final TrackingKey tk = new TrackingKey( id );
         return constructContentDTO( recordManager.getLegacy( tk ), baseUrl );
+    }
+
+    public void clearRecord( final String id ) throws ContentException
+    {
+        final TrackingKey tk = new TrackingKey( id );
+        recordManager.delete( tk );
     }
 
     private TrackedContentDTO constructContentDTO( final TrackedContent content, final String baseUrl )

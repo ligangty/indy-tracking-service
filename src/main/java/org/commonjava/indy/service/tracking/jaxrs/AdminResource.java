@@ -16,6 +16,7 @@
 package org.commonjava.indy.service.tracking.jaxrs;
 
 import org.commonjava.indy.service.tracking.controller.AdminController;
+import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
@@ -190,10 +191,16 @@ public class AdminResource
                     @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
     {
         Response response;
+        try
+        {
+            controller.clearRecord( id );
+            response = Response.status( Response.Status.NO_CONTENT ).build();
+        }
+        catch ( ContentException e )
+        {
+            response = responseHelper.formatResponse( e );
+        }
 
-        logger.info( "id is: {}", id );
-
-        response = Response.ok().build();
         return response;
     }
 
