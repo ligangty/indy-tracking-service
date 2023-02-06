@@ -29,4 +29,7 @@ public interface IndyTrackingConfiguration
 {
     @WithName( "baseDir" )
     File baseDir();
+
+    @WithName( "track.group.content" )
+    Boolean trackGroupContent();
 }

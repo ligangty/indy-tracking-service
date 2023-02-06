@@ -107,6 +107,9 @@ indy_security:
 
 tracking:
   baseDir: "data"
+  track:
+    group:
+      content: true
 
 kafka:
   bootstrap:
@@ -117,12 +120,12 @@ mp:
     emitter:
       # the default buffer size for emitter's OnOverflow buffer strategy of back-pressure control
       default-buffer-size: 1024
-    outgoing:
-      store-event:
-        connector: "smallrye-kafka"
-        topics: "store-event"
+    incoming:
+      file-event-in:
+        connector: smallrye-kafka
+        topic: file-event
         value:
-          serializer: "io.quarkus.kafka.client.serialization.ObjectMapperSerializer"
+          deserializer: org.commonjava.event.file.FileEventDeserializer
 
 cassandra:
   enabled: true
