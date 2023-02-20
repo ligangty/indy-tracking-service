@@ -37,8 +37,6 @@
         <!--
         <honeycomb.otel.version>1.0.0</honeycomb.otel.version>
         -->
-        <skipTests>false</skipTests>
-        <plugin.jacoco.skip>false</plugin.jacoco.skip>
     </properties>
 
     <dependencies>
@@ -115,6 +113,11 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jacoco</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
