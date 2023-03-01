@@ -128,15 +128,10 @@ public class AdminResource
     @Path( "/{id}/record/zip" )
     @GET
     @Produces( MEDIATYPE_APPLICATION_ZIP )
-    public Response getZipRepository(
+    public File getZipRepository(
                     @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
     {
-        Response response;
-
-        logger.info( "id is: {}", id );
-
-        response = Response.ok().build();
-        return response;
+        return controller.getZipRepository( id );
     }
 
     @Operation( description = "Alias of /{id}/record, returns the tracking record for the specified key" )

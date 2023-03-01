@@ -24,11 +24,13 @@ import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
 import org.commonjava.indy.service.tracking.model.TrackedContent;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
+import org.commonjava.indy.service.tracking.model.dto.ContentDTO;
+import org.commonjava.indy.service.tracking.model.dto.ContentEntryDTO;
+import org.commonjava.indy.service.tracking.model.dto.ContentTransferDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntryDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntrySetDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackingIdsDTO;
-import org.commonjava.indy.service.tracking.model.dto.ContentTransferDTO;
 import org.commonjava.indy.service.tracking.util.UrlUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
@@ -199,13 +201,40 @@ public class AdminController
         Set<ContentTransferDTO> cut_entries = new HashSet<>();
         for ( TrackedContentEntry entry : entries )
         {
-            ContentTransferDTO cut_entry =
-                            new ContentTransferDTO( entry.getStoreKey(), entry.getTrackingKey(), entry.getAccessChannel(),
-                                                    entry.getPath(), entry.getOriginUrl(), entry.getEffect() );
+            ContentTransferDTO cut_entry = new ContentTransferDTO( entry.getStoreKey(), entry.getTrackingKey(),
+                                                                   entry.getAccessChannel(), entry.getPath(),
+                                                                   entry.getOriginUrl(), entry.getEffect() );
             cut_entries.add( cut_entry );
         }
 
         return cut_entries;
+    }
+
+    private ContentDTO convertToContentDTO( final TrackedContent record )
+    {
+        ContentDTO dto = new ContentDTO();
+        dto.setKey( record.getKey() );
+        Set<ContentEntryDTO> uploads = new HashSet<>();
+        Set<ContentEntryDTO> downloads = new HashSet<>();
+        for ( TrackedContentEntry entry : record.getUploads() )
+        {
+            uploads.add( convertToCOntentEntryDTO( entry ) );
+        }
+        for ( TrackedContentEntry entry : record.getDownloads() )
+        {
+            downloads.add( convertToCOntentEntryDTO( entry ) );
+        }
+        dto.setUploads( uploads );
+        dto.getDownloads( downloads );
+        return dto;
+    }
+
+    private ContentEntryDTO convertToCOntentEntryDTO( TrackedContentEntry entry )
+    {
+        ContentEntryDTO entryDTO = new ContentEntryDTO();
+        entryDTO.setStoreKey( entry.getStoreKey() );
+        entryDTO.setPath( entry.getPath() );
+        return entryDTO;
     }
 
     public TrackingIdsDTO getLegacyTrackingIds()
@@ -291,6 +320,14 @@ public class AdminController
             failed.set( true );
             return null;
         }
+    }
+
+    public File getZipRepository( String id )
+    {
+        final TrackingKey tk = new TrackingKey( id );
+        final TrackedContent record = recordManager.get( tk );
+        ContentDTO dto = convertToContentDTO( record );
+        return contentService.getZipRepository( dto );
     }
 
 }
