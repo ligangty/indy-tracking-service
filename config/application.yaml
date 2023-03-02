@@ -143,3 +143,22 @@ cassandra:
   pass: cassandra
   keyspace: folo
   keyspaceReplicas: 1
+
+"%dev":
+  indy_security:
+    enabled: false
+  quarkus:
+    log:
+      level: INFO
+      category:
+        "org.commonjava.service.tracking":
+          level: TRACE
+      console:
+        enable: true
+      file:
+        enable: true
+        path: "/tmp/indy-tracking-service.log"
+        format: "%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n"
+        rotation:
+          max-backup-index: 5
+          max-file-size: 10M
