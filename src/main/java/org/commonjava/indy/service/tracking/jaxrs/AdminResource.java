@@ -302,7 +302,7 @@ public class AdminResource
 
     @Operation( description = "Import records from a ZIP file." )
     @APIResponse( responseCode = "201", description = "Import ZIP content" )
-    @Path( "/report/export" )
+    @Path( "/report/import" )
     @PUT
     public Response importReport( final @Context UriInfo uriInfo, final @Context HttpServletRequest request )
     {
