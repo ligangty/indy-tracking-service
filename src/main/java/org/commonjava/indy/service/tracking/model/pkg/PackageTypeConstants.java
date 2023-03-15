@@ -15,6 +15,8 @@
  */
 package org.commonjava.indy.service.tracking.model.pkg;
 
+import java.util.Set;
+
 public class PackageTypeConstants
 {
     public static final String PKG_TYPE_MAVEN = "maven";
@@ -27,5 +29,10 @@ public class PackageTypeConstants
     {
         return PKG_TYPE_MAVEN.equals( pkgType ) || PKG_TYPE_NPM.equals( pkgType ) || PKG_TYPE_GENERIC_HTTP.equals(
                         pkgType );
+    }
+
+    public static Set<String> getPackageTypes()
+    {
+        return Set.of( PKG_TYPE_MAVEN, PKG_TYPE_NPM, PKG_TYPE_GENERIC_HTTP );
     }
 }

@@ -1,5 +1,6 @@
 package org.commonjava.indy.service.tracking.model;
 
+import org.commonjava.indy.service.tracking.model.pkg.PackageTypeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,11 @@ public final class StoreKey
 
     public StoreKey( final String packageType, final StoreType type, final String name )
     {
+        if ( !PackageTypeConstants.isValidPackageType( packageType ) )
+        {
+            throw new IllegalArgumentException( "Unsupported package type: " + packageType + ". Valid values are: "
+                                                                + PackageTypeConstants.getPackageTypes() );
+        }
         this.packageType = packageType;
         this.type = type;
         this.name = name;
