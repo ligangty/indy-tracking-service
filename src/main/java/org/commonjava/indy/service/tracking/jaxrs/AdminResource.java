@@ -329,7 +329,7 @@ public class AdminResource
     @POST
     @Consumes( APPLICATION_JSON )
     @Produces( APPLICATION_JSON )
-    public Response doDelete( @Context final UriInfo uriInfo, @Context final BatchDeleteRequest request )
+    public Response doDelete( @Context final UriInfo uriInfo, final BatchDeleteRequest request )
     {
         String trackingID = request.getTrackingID();
 
