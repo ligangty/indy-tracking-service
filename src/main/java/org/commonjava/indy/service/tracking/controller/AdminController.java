@@ -29,7 +29,6 @@ import org.commonjava.indy.service.tracking.model.dto.ContentEntryDTO;
 import org.commonjava.indy.service.tracking.model.dto.ContentTransferDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntryDTO;
-import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntrySetDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackingIdsDTO;
 import org.commonjava.indy.service.tracking.util.UrlUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -313,7 +312,7 @@ public class AdminController
         Set<ContentTransferDTO> transfer_entries = constructTransferDTOSet( entries );
         try (Response response = contentService.recalculateEntrySet( transfer_entries ))
         {
-            return response.readEntity( TrackedContentEntrySetDTO.class ).entries;
+            return response.readEntity( Set.class );
         }
         catch ( Exception e )
         {
