@@ -367,13 +367,4 @@ public class AdminResource
         return maintenanceService.doDelete( request );
     }
 
-    @Operation( description = "Import folo from ISPN cache to Cassandra." )
-    @APIResponse( responseCode = "201", description = "Import folo from ISPN cache to Cassandra." )
-    @Path( "/report/importToCassandra" )
-    @PUT
-    public Response importFoloToCassandra( final @Context UriInfo uriInfo, final @Context HttpServletRequest request )
-    {
-        return Response.created( uriInfo.getRequestUri() ).build();
-    }
-
 }
