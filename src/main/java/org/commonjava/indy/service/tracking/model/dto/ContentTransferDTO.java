@@ -39,7 +39,9 @@ public class ContentTransferDTO
     {
     }
 
-    public ContentTransferDTO( final StoreKey storeKey, final TrackingKey trackingKey, final AccessChannel accessChannel, final String path, final String originUrl, final StoreEffect effect )
+    public ContentTransferDTO( final StoreKey storeKey, final TrackingKey trackingKey,
+                               final AccessChannel accessChannel, final String path, final String originUrl,
+                               final StoreEffect effect )
     {
         this.storeKey = storeKey;
         this.trackingKey = trackingKey;
@@ -99,11 +101,13 @@ public class ContentTransferDTO
         this.path = path.startsWith( "/" ) ? path : "/" + path;
     }
 
-    public StoreEffect getEffect() {
+    public StoreEffect getEffect()
+    {
         return this.effect;
     }
 
-    public void setEffect(final StoreEffect effect) {
+    public void setEffect( final StoreEffect effect )
+    {
         this.effect = effect;
     }
 

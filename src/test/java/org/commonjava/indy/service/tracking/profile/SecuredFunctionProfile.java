@@ -15,26 +15,18 @@
  */
 package org.commonjava.indy.service.tracking.profile;
 
-import io.quarkus.test.junit.QuarkusTestProfile;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseIndyTestProfile
-                implements QuarkusTestProfile
+public class SecuredFunctionProfile
+                extends BaseIndyTestProfile
 {
     @Override
-    public Map<String, String> getConfigOverrides()
+    Map<String, String> getExtraConfigOverrides()
     {
-        Map<String, String> configs = new HashMap<>();
-        configs.put( "quarkus.security.auth.enabled-in-dev-mode", "false" );
-        configs.put( "quarkus.keycloak.devservices.enabled", "false" );
-        configs.put( "quarkus.oidc.enabled", "false" );
-        configs.put( "indy_security.enabled", "false" );
-        configs.putAll( getExtraConfigOverrides() );
-        return configs;
+        Map<String, String> config = new HashMap<>();
+        config.put( "indy_security.enabled", "true" );
+        return config;
     }
-
-    abstract Map<String, String> getExtraConfigOverrides();
 
 }

@@ -285,6 +285,11 @@ public class AdminController
         TrackingKey trackingKey = new TrackingKey( id );
         TrackedContent record = recordManager.get( trackingKey );
 
+        if ( record == null )
+        {
+            return null;
+        }
+
         AtomicBoolean failed = new AtomicBoolean( false );
 
         Set<TrackedContentEntry> recalculatedUploads = recalculateEntrySet( record.getUploads(), failed );

@@ -26,7 +26,6 @@ import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuer
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
 import org.commonjava.indy.service.tracking.model.AccessChannel;
-import org.commonjava.indy.service.tracking.model.StoreEffect;
 import org.commonjava.indy.service.tracking.model.StoreKey;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
