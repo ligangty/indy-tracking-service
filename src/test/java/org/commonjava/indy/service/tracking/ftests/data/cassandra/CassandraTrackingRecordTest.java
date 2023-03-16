@@ -28,6 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.CassandraContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -37,6 +38,7 @@ import java.util.Set;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
+@Testcontainers( disabledWithoutDocker = true )
 public class CassandraTrackingRecordTest
 {
     @InjectMock

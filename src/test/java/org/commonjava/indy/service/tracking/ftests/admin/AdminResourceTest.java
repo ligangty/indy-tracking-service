@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.CassandraContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 @QuarkusTest
 @TestProfile( CassandraFunctionProfile.class )
+@Testcontainers( disabledWithoutDocker = true )
 public class AdminResourceTest
 {
     private static volatile CassandraContainer<?> cassandraContainer;
