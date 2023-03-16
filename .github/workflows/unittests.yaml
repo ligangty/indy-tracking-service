@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk-version: [ "19" ]
+        jdk-version: [ "11", "19" ]
 
     steps:
       - name: 🧺 Checkout Repository Code
