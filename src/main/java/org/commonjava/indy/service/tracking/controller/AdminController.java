@@ -15,6 +15,7 @@
  */
 package org.commonjava.indy.service.tracking.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.client.content.ContentService;
 import org.commonjava.indy.service.tracking.config.IndyTrackingConfiguration;
@@ -332,6 +333,30 @@ public class AdminController
         final TrackedContent record = recordManager.get( tk );
         ContentDTO dto = convertToContentDTO( record );
         return contentService.getZipRepository( dto );
+    }
+
+    public boolean recordArtifact( InputStream stream )
+    {
+        TrackedContentEntry entry;
+        ObjectMapper mapper = new ObjectMapper();
+        boolean isRecorded = false;
+        try
+        {
+            entry = mapper.readValue( stream, TrackedContentEntry.class );
+            if ( entry != null )
+            {
+                isRecorded = recordManager.recordArtifact( entry );
+            }
+        }
+        catch ( IOException e )
+        {
+            logger.error( String.format( "Failed to record tracked entry. Reason: %s", e.getMessage() ), e );
+        }
+        catch ( final ContentException | IndyWorkflowException e )
+        {
+            logger.error( "Failed to read TrackedContentEntry from event payload.", e );
+        }
+        return isRecorded;
     }
 
 }

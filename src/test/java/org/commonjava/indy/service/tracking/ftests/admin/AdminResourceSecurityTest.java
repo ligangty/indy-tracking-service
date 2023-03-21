@@ -32,6 +32,12 @@ public class AdminResourceSecurityTest
     }
 
     @Test
+    void testRecordArtifact()
+    {
+        given().when().put( BASE_URL + "report/recordArtifact" ).then().statusCode( 403 );
+    }
+
+    @Test
     public void testGetZipRepository()
     {
         given().when().get( BASE_URL + TRACKING_ID + "/record/zip" ).then().statusCode( 500 );

@@ -158,6 +158,24 @@ public class AdminResource
         return rb.build();
     }
 
+    @Operation( description = "Store record for single tracking content artifact" )
+    @APIResponse( responseCode = "201", description = "Store tracking entry" )
+    @Path( "/report/recordArtifact" )
+    @PUT
+    public Response recordArtifact( final @Context UriInfo uriInfo, final @Context HttpServletRequest request )
+    {
+        try
+        {
+            controller.recordArtifact( request.getInputStream() );
+        }
+        catch ( IOException e )
+        {
+            responseHelper.throwError( new IndyWorkflowException( "IO error", e ) );
+        }
+
+        return Response.created( uriInfo.getRequestUri() ).build();
+    }
+
     @Operation( description = "Seal the tracking record for the specified key, to prevent further content logging" )
     @APIResponse( responseCode = "200", description = "Tracking record" )
     @APIResponse( responseCode = "404", description = "No such tracking record" )

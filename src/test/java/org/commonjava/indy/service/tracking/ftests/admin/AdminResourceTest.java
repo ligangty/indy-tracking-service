@@ -9,11 +9,15 @@ import org.commonjava.indy.service.tracking.client.content.BatchDeleteRequest;
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraConfiguration;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
+import org.commonjava.indy.service.tracking.model.AccessChannel;
+import org.commonjava.indy.service.tracking.model.StoreEffect;
 import org.commonjava.indy.service.tracking.model.StoreKey;
 import org.commonjava.indy.service.tracking.model.StoreType;
+import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntryDTO;
+import org.commonjava.indy.service.tracking.model.pkg.PackageTypeConstants;
 import org.commonjava.indy.service.tracking.profile.CassandraFunctionProfile;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -99,6 +103,28 @@ public class AdminResourceTest
     void testRecalculateRecordNotFound()
     {
         given().when().get( BASE_URL + "random-id" + "/record/recalculate" ).then().statusCode( 404 );
+    }
+
+    @Test
+    void testRecordArtifact()
+    {
+        TrackedContentEntry entry = new TrackedContentEntry();
+        entry.setTrackingKey( new TrackingKey( "new-tracking-id" ) );
+        StoreKey storeKey = new StoreKey( PackageTypeConstants.PKG_TYPE_MAVEN, StoreType.remote, "test" );
+        entry.setStoreKey( storeKey );
+        entry.setSize( 123L );
+        entry.setMd5( "md5123" );
+        entry.setSha1( "sha112345" );
+        entry.setSha256( "sha256123" );
+        entry.setEffect( StoreEffect.UPLOAD );
+        entry.setAccessChannel( AccessChannel.GENERIC_PROXY );
+        entry.setOriginUrl( "uri://test/file" );
+        Set<Long> timestamps = new HashSet<>();
+        timestamps.add( 123L );
+        timestamps.add( 1234L );
+        entry.setTimestamps( timestamps );
+        entry.setPath( "/path/to/file" );
+        given().body( entry ).when().put( BASE_URL + "report/recordArtifact" ).then().statusCode( 201 );
     }
 
     @Test
