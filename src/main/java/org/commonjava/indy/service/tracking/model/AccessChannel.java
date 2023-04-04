@@ -29,4 +29,9 @@ public enum AccessChannel
     /** Used to signify content coming from normal repositories and groups. */
     NATIVE,
 
+    /** Used when the store is accessed via regular Maven repo.
+     *  NOTE: This has been changed to {@link #NATIVE} in our tracking code. It is included for historical purposes. */
+    @Deprecated
+    MAVEN_REPO;
+
 }
