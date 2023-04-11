@@ -178,7 +178,7 @@ public class AdminResourceTest
         // Set up mock response from adminController
         Set<Constants.TRACKING_TYPE> types = new HashSet<>();
         types.add( Constants.TRACKING_TYPE.SEALED );
-        String expected_string = "{\"inProgress\":null,\"sealed\":null}";
+        String expected_string = "{ }";
 
         when( adminController.getLegacyTrackingIds() ).thenReturn( new TrackingIdsDTO() );
         when( adminController.getTrackingIds( types ) ).thenReturn( new TrackingIdsDTO() );

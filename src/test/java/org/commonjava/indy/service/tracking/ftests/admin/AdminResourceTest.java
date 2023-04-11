@@ -90,8 +90,22 @@ public class AdminResourceTest
     void testRecalculateRecordSuccess()
     {
         String trackingId = "abc125";
-        String expected_string = "{\"key\":{\"id\":\"" + trackingId
-                        + "\"},\"uploads\":[{\"storeKey\":{\"packageType\":\"maven\",\"type\":\"remote\",\"name\":\"test\"},\"accessChannel\":\"GENERIC_PROXY\",\"path\":\"/path/to/file\",\"originUrl\":\"https://example.com/file\",\"localUrl\":\"http://localhost:8081/api/content/maven/remote/test/path/to/file\",\"md5\":\"md5hash124\",\"sha256\":\"sha256hash124\",\"sha1\":\"sha1hash124\",\"size\":null,\"timestamps\":null}],\"downloads\":[{\"storeKey\":{\"packageType\":\"maven\",\"type\":\"remote\",\"name\":\"test\"},\"accessChannel\":\"GENERIC_PROXY\",\"path\":\"/path/to/file\",\"originUrl\":\"https://example.com/file\",\"localUrl\":\"http://localhost:8081/api/content/maven/remote/test/path/to/file\",\"md5\":\"md5hash124\",\"sha256\":\"sha256hash124\",\"sha1\":\"sha1hash124\",\"size\":null,\"timestamps\":null}]}";
+        String expected_string =
+                        "{\n" + "  \"key\" : {\n" + "    \"id\" : \"abc125\"\n" + "  },\n" + "  \"uploads\" : [ {\n"
+                                        + "    \"storeKey\" : \"maven:remote:test\",\n"
+                                        + "    \"accessChannel\" : \"GENERIC_PROXY\",\n"
+                                        + "    \"path\" : \"/path/to/file\",\n"
+                                        + "    \"originUrl\" : \"https://example.com/file\",\n"
+                                        + "    \"localUrl\" : \"http://localhost:8081/api/content/maven/remote/test/path/to/file\",\n"
+                                        + "    \"md5\" : \"md5hash124\",\n" + "    \"sha256\" : \"sha256hash124\",\n"
+                                        + "    \"sha1\" : \"sha1hash124\"\n" + "  } ],\n" + "  \"downloads\" : [ {\n"
+                                        + "    \"storeKey\" : \"maven:remote:test\",\n"
+                                        + "    \"accessChannel\" : \"GENERIC_PROXY\",\n"
+                                        + "    \"path\" : \"/path/to/file\",\n"
+                                        + "    \"originUrl\" : \"https://example.com/file\",\n"
+                                        + "    \"localUrl\" : \"http://localhost:8081/api/content/maven/remote/test/path/to/file\",\n"
+                                        + "    \"md5\" : \"md5hash124\",\n" + "    \"sha256\" : \"sha256hash124\",\n"
+                                        + "    \"sha1\" : \"sha1hash124\"\n" + "  } ]\n" + "}";
         given().when()
                .get( BASE_URL + trackingId + "/record/recalculate" )
                .then()
@@ -138,7 +152,15 @@ public class AdminResourceTest
     {
         String trackingId = "abc123";
         String expected_response =
-                        "{\"key\":{\"id\":\"abc123\"},\"uploads\":[],\"downloads\":[{\"storeKey\":{\"packageType\":\"maven\",\"type\":\"remote\",\"name\":\"store_key_1\"},\"accessChannel\":\"GENERIC_PROXY\",\"path\":\"/path/to/file\",\"originUrl\":\"https://example.com/file\",\"localUrl\":\"http://localhost:8081/api/content/maven/remote/store_key_1/path/to/file\",\"md5\":\"md5hash123\",\"sha256\":\"sha256hash123\",\"sha1\":\"sha1hash123\",\"size\":1024,\"timestamps\":[1647317221,1647317231]}]}";
+                        "{\n" + "  \"key\" : {\n" + "    \"id\" : \"abc123\"\n" + "  },\n" + "  \"downloads\" : [ {\n"
+                                        + "    \"storeKey\" : \"maven:remote:store_key_1\",\n"
+                                        + "    \"accessChannel\" : \"GENERIC_PROXY\",\n"
+                                        + "    \"path\" : \"/path/to/file\",\n"
+                                        + "    \"originUrl\" : \"https://example.com/file\",\n"
+                                        + "    \"localUrl\" : \"http://localhost:8081/api/content/maven/remote/store_key_1/path/to/file\",\n"
+                                        + "    \"md5\" : \"md5hash123\",\n" + "    \"sha256\" : \"sha256hash123\",\n"
+                                        + "    \"sha1\" : \"sha1hash123\",\n" + "    \"size\" : 1024,\n"
+                                        + "    \"timestamps\" : [ 1647317221, 1647317231 ]\n" + "  } ]\n" + "}";
 
         given().when()
                .get( BASE_URL + trackingId + "/record" )
@@ -151,7 +173,7 @@ public class AdminResourceTest
     void testGetRecordReturnsNotFoundResponse() throws IndyWorkflowException
     {
         // when no existing tracking record is found a new tracking report is returned
-        String expected_string = "{\"key\":{\"id\":\"lslsls\"},\"uploads\":[],\"downloads\":[]}";
+        String expected_string = "{\n" + "  \"key\" : {\n" + "    \"id\" : \"lslsls\"\n" + "  }\n" + "}";
         given().when().get( BASE_URL + "lslsls" + "/record" ).then().statusCode( 200 ).body( is( expected_string ) );
     }
 
@@ -184,10 +206,12 @@ public class AdminResourceTest
     public void testGetRecordIdsSuccess()
     {
         // Set up mock response from adminController
-        String expected_string1 =
-                        "{\"inProgress\":null,\"sealed\":[\"abc123\",\"abc124\",\"abc125\",\"abc126\",\"abc127\",\"tracking-id\",\"abc128\"]}";
-        String expected_string2 =
-                        "{\"inProgress\":null,\"sealed\":[\"abc123\",\"abc124\",\"abc125\",\"abc126\",\"abc127\",\"tracking-id\",\"abc128\"]}";
+        String expected_string1 = "{\n"
+                        + "  \"sealed\" : [ \"abc123\", \"abc124\", \"abc125\", \"abc126\", \"abc127\", \"tracking-id\", \"abc128\" ]\n"
+                        + "}";
+        String expected_string2 = "{\n"
+                        + "  \"sealed\" : [ \"abc123\", \"abc124\", \"abc125\", \"abc126\", \"abc127\", \"tracking-id\", \"abc128\" ]\n"
+                        + "}";
 
         // Call getRecordIds() function
         given().when().get( BASE_URL + "report/ids/sealed" ).then().statusCode( 200 ).body( is( expected_string1 ) );
