@@ -2,6 +2,7 @@ package org.commonjava.indy.service.tracking.client;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.commonjava.indy.service.tracking.client.content.ContentService;
+import org.commonjava.indy.service.tracking.jaxrs.DTOStreamingOutput;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.dto.ContentDTO;
 import org.commonjava.indy.service.tracking.model.dto.ContentTransferDTO;
@@ -27,7 +28,8 @@ public class ContentServiceTest
     {
         Set<ContentTransferDTO> entries = new HashSet<>();
         Response response = contentService.recalculateEntrySet( entries );
-        Set<TrackedContentEntry> newEntries = response.readEntity( HashSet.class );
+        Set<TrackedContentEntry> newEntries =
+                        (Set<TrackedContentEntry>) response.readEntity( DTOStreamingOutput.class ).getDto();
         Assertions.assertNotNull( newEntries );
         Assertions.assertEquals( 1, newEntries.size() );
     }

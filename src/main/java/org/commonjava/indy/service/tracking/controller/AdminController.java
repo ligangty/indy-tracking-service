@@ -22,6 +22,7 @@ import org.commonjava.indy.service.tracking.config.IndyTrackingConfiguration;
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuery;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
+import org.commonjava.indy.service.tracking.jaxrs.DTOStreamingOutput;
 import org.commonjava.indy.service.tracking.model.TrackedContent;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
@@ -318,7 +319,7 @@ public class AdminController
         Set<ContentTransferDTO> transfer_entries = constructTransferDTOSet( entries );
         try (Response response = contentService.recalculateEntrySet( transfer_entries ))
         {
-            return response.readEntity( Set.class );
+            return (Set<TrackedContentEntry>) response.readEntity( DTOStreamingOutput.class ).getDto();
         }
         catch ( Exception e )
         {

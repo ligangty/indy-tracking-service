@@ -1,7 +1,6 @@
 package org.commonjava.indy.service.tracking.handler;
 
 import io.quarkus.test.Mock;
-import org.apache.http.HttpStatus;
 import org.commonjava.indy.service.tracking.client.content.ContentService;
 import org.commonjava.indy.service.tracking.jaxrs.ResponseHelper;
 import org.commonjava.indy.service.tracking.model.AccessChannel;
@@ -45,7 +44,7 @@ public class MockableContentService
         entry.setSha1( "sha1hash124" );
         entry.setSha256( "sha256hash124" );
         newEntries.add( entry );
-        return Response.status( HttpStatus.SC_OK ).entity( newEntries ).build();
+        return helper.formatOkResponseWithJsonEntity( newEntries );
     }
 
     @Override

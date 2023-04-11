@@ -103,4 +103,9 @@ public class DTOStreamingOutput
             throw ioe.get();
         }
     }
+
+    public Object getDto()
+    {
+        return dto;
+    }
 }
