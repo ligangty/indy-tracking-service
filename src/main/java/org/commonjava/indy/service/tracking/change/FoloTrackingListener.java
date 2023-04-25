@@ -81,7 +81,7 @@ public class FoloTrackingListener
             logger.trace( "No tracking key for access to: {}", event.getTargetPath() );
             return;
         }
-        final AccessChannel accessChannel = (AccessChannel) metadata.get( Constants.ACCESS_CHANNEL );
+        final AccessChannel accessChannel = AccessChannel.valueOf( (String) metadata.get( Constants.ACCESS_CHANNEL ) );
 
         try
         {
@@ -130,7 +130,7 @@ public class FoloTrackingListener
             logger.trace( "No tracking key. Not recording." );
             return;
         }
-        final AccessChannel accessChannel = (AccessChannel) metadata.get( Constants.ACCESS_CHANNEL );
+        final AccessChannel accessChannel = AccessChannel.valueOf( (String) metadata.get( Constants.ACCESS_CHANNEL ) );
         StoreKey storeKey = StoreKey.fromString( event.getStoreKey() );
 
         if ( !trackingConfig.trackGroupContent() && storeKey.getType() == group )
