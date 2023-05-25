@@ -1,34 +1,9 @@
 # Quarkus will choose application.yaml over application.properties.
 quarkus:
-  http:
-    port: 8080
-    read-timeout: 30m
-    limits:
-      max-body-size: 500M
   package:
     type: uber-jar
   application:
     name: "indy-tracking-service"
-  # Logging (disable console on prod)
-  log:
-    level: INFO
-    category:
-      "org.commonjava.indy.service.tracking":
-        level: DEBUG
-    console:
-      level: DEBUG
-      enable: true
-    file:
-      enable: true
-      path: "log/tracking.log"
-      level: DEBUG
-      format: "%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n"
-      rotation:
-        max-backup-index: 5
-        max-file-size: 10M
-  keycloak:
-    policy-enforcer:
-      enable: false
   oidc:
     enabled: true
     auth-server-url: "https://localhost:8543/realms/indy"
@@ -39,44 +14,6 @@ quarkus:
       verification: none
     token:
       issuer: any
-  security:
-    auth:
-      enabled-in-dev-mode: false
-
-  oidc-client:
-    auth-server-url: "keycloak_server_url/realms/pncredhat"
-    client-id: your_client_id
-    credentials:
-      secret: your_secret
-
-  swagger-ui:
-    always-include: true
-
-indy_security:
-  enabled: true
-  security_bindings_yaml: security-bindings.yaml
-
-tracking:
-  baseDir: "data"
-
-content-service-api/mp-rest/url: http://localhost
-content-service-api/mp-rest/scope: javax.inject.Singleton
-promote-service-api/mp-rest/url: http://localhost
-promote-service-api/mp-rest/scope: javax.inject.Singleton
-
-kafka:
-  bootstrap:
-    servers: "localhost:9092"
-
-cassandra:
-  enabled: true
-  host: localhost
-  port: 9042
-  user: cassandra
-  pass: cassandra
-  keyspace: folo
-  keyspaceReplicas: 1
-
 "%dev":
   quarkus:
     kubernetes-config:
@@ -132,4 +69,16 @@ cassandra:
       console:
         enable: true
   tracking:
+    baseDir: "data"
+    track:
+      group:
+        content: true
     deletionAdditionalGuardCheck: true
+  cassandra:
+    enabled: true
+    host: localhost
+    port: 9042
+    user: cassandra
+    pass: cassandra
+    keyspace: folo
+    keyspaceReplicas: 1
