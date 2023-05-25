@@ -126,8 +126,6 @@ public class FoloTrackingListener
 
         EventMetadata metadata = event.getEventMetadata();
 
-        logger.warn( ">>> Metadata: " + metadata );
-
         String trackingId = event.getSessionId();
 
         final TrackingKey trackingKey = StringUtils.isNotBlank( trackingId ) ? new TrackingKey( trackingId ) : null;
