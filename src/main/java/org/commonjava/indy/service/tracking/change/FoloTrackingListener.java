@@ -86,6 +86,11 @@ public class FoloTrackingListener
 
         try
         {
+            String keyString = event.getStoreKey();
+            if (!StringUtils.isNotBlank( keyString )) {
+                logger.trace( "NOT tracking content without StoreKey" );
+                return;
+            }
             StoreKey storeKey = StoreKey.fromString( event.getStoreKey() );
             if ( !trackingConfig.trackGroupContent() && storeKey.getType() == group )
             {
@@ -132,6 +137,11 @@ public class FoloTrackingListener
             return;
         }
         final AccessChannel accessChannel = AccessChannel.valueOf( (String) metadata.get( Constants.ACCESS_CHANNEL ) );
+        String keyString = event.getStoreKey();
+        if (!StringUtils.isNotBlank( keyString )) {
+            logger.trace( "NOT tracking content without StoreKey" );
+            return;
+        }
         StoreKey storeKey = StoreKey.fromString( event.getStoreKey() );
 
         if ( !trackingConfig.trackGroupContent() && storeKey.getType() == group )
