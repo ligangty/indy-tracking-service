@@ -51,13 +51,26 @@ public class FoloTrackingAdjustListener
     public CompletionStage<Void> onPromoteComplete( Message<PathsPromoteCompleteEvent> message )
     {
         PathsPromoteCompleteEvent event = message.getPayload();
-        logger.trace( "Promote COMPLETE: {}", event );
+        try
+        {
+            handlePromoteCompleteEvent( event );
+        }
+        catch ( Throwable e )
+        {
+            logger.error( "Failed to handle the promote complete event", e );
+        }
+        return message.ack();
+    }
+
+    private void handlePromoteCompleteEvent( PathsPromoteCompleteEvent event )
+    {
+        logger.info( "Promote COMPLETE: {}", event );
 
         Set<String> paths = event.getCompletedPaths();
         if ( paths.isEmpty() )
         {
             logger.trace( "No completedPaths, skip adjust" );
-            return message.ack();
+            return;
         }
 
         StoreKey source = StoreKey.fromString( event.getSourceStore() );
@@ -67,7 +80,7 @@ public class FoloTrackingAdjustListener
         if ( trackingKey == null )
         {
             logger.trace( "No tracking key found to: {}", source );
-            return message.ack();
+            return;
         }
 
         // Get the sealed record, client MUST seal the record before promote
@@ -75,13 +88,12 @@ public class FoloTrackingAdjustListener
         if ( trackedContent == null )
         {
             logger.trace( "No sealed record found, trackingKey: {}", trackingKey );
-            return message.ack();
+            return;
         }
 
         adjustTrackedContent( trackedContent, target );
 
         recordManager.replaceTrackingRecord( trackedContent );
-        return message.ack();
     }
 
     private void adjustTrackedContent( TrackedContent trackedContent, StoreKey target )

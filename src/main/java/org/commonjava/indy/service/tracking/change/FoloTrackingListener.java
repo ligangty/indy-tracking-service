@@ -176,11 +176,25 @@ public class FoloTrackingListener
         FileEvent event = message.getPayload();
         if ( event.getEventType().equals( FileEventType.ACCESS ) )
         {
-            handleFileAccessEvent( event );
+            try
+            {
+                handleFileAccessEvent( event );
+            }
+            catch ( Throwable e )
+            {
+                logger.error( "Failed to handle the file access event", e );
+            }
         }
         else if ( event.getEventType().equals( FileEventType.STORAGE ) )
         {
-            handleFileStorageEvent( event );
+            try
+            {
+                handleFileStorageEvent( event );
+            }
+            catch ( Throwable e )
+            {
+                logger.error( "Failed to handle the file storage event", e );
+            }
         }
         return message.ack();
     }
