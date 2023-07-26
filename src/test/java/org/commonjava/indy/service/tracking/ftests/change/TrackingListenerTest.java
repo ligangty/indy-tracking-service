@@ -131,7 +131,7 @@ public class TrackingListenerTest
         InMemorySource<FileEvent> fileEvents = connector.source( "file-event-in" );
         FileEvent event = new FileEvent( FileEventType.STORAGE );
         EventMetadata metadata = new EventMetadata();
-        metadata.set( Constants.ACCESS_CHANNEL, AccessChannel.GENERIC_PROXY.toString() );
+        metadata.set( Constants.ACCESS_CHANNEL, AccessChannel.NATIVE.toString() );
         event.setEventMetadata( metadata );
         String trackingId = "access-tracking-id1";
         event.setSessionId( trackingId );
