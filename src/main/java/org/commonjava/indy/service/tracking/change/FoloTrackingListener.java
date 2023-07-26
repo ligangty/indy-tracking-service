@@ -29,6 +29,7 @@ import org.commonjava.indy.service.tracking.model.AccessChannel;
 import org.commonjava.indy.service.tracking.model.StoreKey;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
+import org.commonjava.indy.service.tracking.util.UrlUtils;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.net.MalformedURLException;
 import java.util.concurrent.CompletionStage;
 
 import static org.commonjava.indy.service.tracking.Constants.ORIGIN_PATH;
@@ -55,7 +57,7 @@ public class FoloTrackingListener
     @Inject
     private CassandraTrackingQuery recordManager;
 
-    public void handleFileAccessEvent( final FileEvent event )
+    public void handleFileAccessEvent( final FileEvent event ) throws IndyWorkflowException
     {
         logger.info( "FILE ACCESS: {}", event );
 
@@ -107,8 +109,15 @@ public class FoloTrackingListener
             // /$pkg from remote, but we use STORAGE_PATH in EventMetadata with /$pkg/package.json to store this metadata,
             //so the real path for this transfer should be /$pkg but its current path is /$pkg/package.json. We need to
             //think about if need to do the replacement here, especially for the originalUrl.
+            String remoteUrl = null;
+            String sourceLocation = event.getSourceLocation();
+            String path = event.getSourcePath();
+            if (sourceLocation != null && path != null)
+            {
+                remoteUrl = UrlUtils.buildUrl( sourceLocation, path );
+            }
             TrackedContentEntry entry =
-                            new TrackedContentEntry( trackingKey, storeKey, accessChannel, event.getSourceLocation(),
+                            new TrackedContentEntry( trackingKey, storeKey, accessChannel, remoteUrl,
                                                      trackingPath, DOWNLOAD, event.getSize(), event.getMd5(),
                                                      event.getSha1(), event.getChecksum() );
             recordManager.recordArtifact( entry );
@@ -118,9 +127,13 @@ public class FoloTrackingListener
             logger.error( String.format( "Failed to record download: %s. Reason: %s", event.getSourcePath(),
                                          e.getMessage() ), e );
         }
+        catch ( final MalformedURLException e )
+        {
+            throw new IndyWorkflowException( "Cannot format URL. Reason: %s", e, e.getMessage() );
+        }
     }
 
-    public void handleFileStorageEvent( final FileEvent event )
+    public void handleFileStorageEvent( final FileEvent event ) throws IndyWorkflowException
     {
         logger.info( "FILE STORAGE: {}", event );
 
@@ -159,9 +172,15 @@ public class FoloTrackingListener
 
             logger.trace( "Tracking report: {} += {} in {} ({})", trackingKey, event.getTargetPath(), storeKey,
                           UPLOAD );
-
+			String remoteUrl = null;
+            String sourceLocation = event.getSourceLocation();
+            String path = event.getSourcePath();
+            if (sourceLocation != null && path != null)
+            {
+                remoteUrl = UrlUtils.buildUrl( sourceLocation, path );
+            }
             TrackedContentEntry entry =
-                            new TrackedContentEntry( trackingKey, storeKey, accessChannel, event.getSourceLocation(),
+                            new TrackedContentEntry( trackingKey, storeKey, accessChannel, remoteUrl,
                                                      event.getTargetPath(), UPLOAD, event.getSize(), event.getMd5(),
                                                      event.getSha1(), event.getChecksum() );
 
@@ -171,6 +190,10 @@ public class FoloTrackingListener
         {
             logger.error( String.format( "Failed to record download: %s. Reason: %s", event.getSourcePath(),
                                          e.getMessage() ), e );
+        }
+        catch ( final MalformedURLException e )
+        {
+            throw new IndyWorkflowException( "Cannot format URL. Reason: %s", e, e.getMessage() );
         }
     }
 
