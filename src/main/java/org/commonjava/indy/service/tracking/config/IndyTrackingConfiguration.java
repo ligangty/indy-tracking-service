@@ -31,6 +31,9 @@ public interface IndyTrackingConfiguration
     @WithName( "baseDir" )
     File baseDir();
 
+    @WithName( "content-service.url" )
+    String contentServiceURL();
+
     @WithName( "track.group.content" )
     @WithDefault( "true" )
     Boolean trackGroupContent();

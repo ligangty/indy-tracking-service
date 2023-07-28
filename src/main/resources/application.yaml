@@ -69,6 +69,8 @@ quarkus:
       console:
         enable: true
   tracking:
+    content-service:
+      url: "http://localhost:8081/api"
     baseDir: "data"
     track:
       group:

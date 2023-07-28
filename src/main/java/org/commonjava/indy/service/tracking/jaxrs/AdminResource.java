@@ -15,9 +15,11 @@
  */
 package org.commonjava.indy.service.tracking.jaxrs;
 
+import org.apache.commons.lang3.StringUtils;
 import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.client.content.BatchDeleteRequest;
 import org.commonjava.indy.service.tracking.client.content.MaintenanceService;
+import org.commonjava.indy.service.tracking.config.IndyTrackingConfiguration;
 import org.commonjava.indy.service.tracking.controller.AdminController;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
@@ -83,6 +85,9 @@ public class AdminResource
     @Inject
     private ResponseHelper responseHelper;
 
+    @Inject
+    private IndyTrackingConfiguration config;
+
     public AdminResource()
     {
     }
@@ -99,7 +104,7 @@ public class AdminResource
         Response response;
         try
         {
-            final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();
+            final String baseUrl = config.contentServiceURL();
             final TrackedContentDTO report = controller.recalculateRecord( id, baseUrl );
 
             if ( report == null )
@@ -185,7 +190,7 @@ public class AdminResource
                     @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id,
                     @Context final UriInfo uriInfo )
     {
-        final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();
+        final String baseUrl = config.contentServiceURL();
         TrackedContentDTO record = controller.seal( id, baseUrl );
         if ( record == null )
         {
@@ -209,7 +214,7 @@ public class AdminResource
         Response response;
         try
         {
-            final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();
+            final String baseUrl = config.contentServiceURL();
             TrackedContentDTO record = controller.getRecord( id, baseUrl );
             if ( record == null )
             {
@@ -365,7 +370,7 @@ public class AdminResource
 
         if ( request.getPaths() == null || request.getPaths().isEmpty() )
         {
-            final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();
+            final String baseUrl = config.contentServiceURL();
             try
             {
                 final TrackedContentDTO record = controller.getRecord( trackingID, baseUrl );
