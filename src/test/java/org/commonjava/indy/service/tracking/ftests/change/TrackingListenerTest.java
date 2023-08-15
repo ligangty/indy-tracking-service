@@ -133,7 +133,7 @@ public class TrackingListenerTest
         FileEvent event = new FileEvent( FileEventType.STORAGE );
         event.setOperation( TransferOperation.UPLOAD );
         EventMetadata metadata = new EventMetadata();
-        metadata.set( Constants.ACCESS_CHANNEL, AccessChannel.NATIVE.toString() );
+        metadata.set( Constants.ACCESS_CHANNEL, AccessChannel.GENERIC_PROXY.toString() );
         event.setEventMetadata( metadata );
         String trackingId = "access-tracking-id1";
         event.setSessionId( trackingId );
